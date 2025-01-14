@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-img = cv2.imread('/Users/R.Abinav/Desktop/CV/AUV/images/custom_gate.jpeg')
+img = cv2.imread('/Users/R.Abinav/Desktop/CV/AUV/images/good.jpeg')
 cv2.imshow('Image',img)
 
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -10,7 +10,7 @@ gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 canny = cv2.Canny(gray, 50, 200)
 #cv2.imshow('Canny', canny)
 
-lines = cv2.HoughLines(canny, 1, np.pi/180, 180, np.array([]))
+lines = cv2.HoughLines(canny, 1, np.pi/180, 200, np.array([]))
 
 if lines is not None:
     for line in lines:
