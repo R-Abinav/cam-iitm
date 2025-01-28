@@ -2,11 +2,11 @@ import cv2
 import numpy as np
 
 #                 H    S    V
-lower1 = np.array([40, 180, 50])
-upper1 = np.array([70, 255, 255])
+lower1 = np.array([0, 0, 150])
+upper1 = np.array([180, 50, 255])
 
-lower2 = np.array([40, 180, 50])
-upper2 = np.array([70, 255, 255])
+lower2 = np.array([0, 0, 150])
+upper2 = np.array([180, 50, 255])
 
 cap = cv2.VideoCapture(0)
 
