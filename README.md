@@ -1,1 +1,1 @@
-AUV Stuff for the IITM Competition
+AUV-CV Stuff for the IITM Competition
