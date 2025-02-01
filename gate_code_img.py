@@ -25,10 +25,10 @@ cv2.imshow("Initial Frame", frame)
 
 #The Limits for the colors
 #                 H    S    V
-lower1 = np.array([0, 20, 0])
+lower1 = np.array([0, 20, 30])
 upper1 = np.array([10, 250, 255])
 
-lower2 = np.array([170, 20, 0])
+lower2 = np.array([170, 20, 30])
 upper2 = np.array([180, 250, 255])
 
 #Apply the color mask , so that the image only sees the color 
@@ -51,11 +51,9 @@ if lines is not None:
     hori = []
 
     for rho,theta in lines[:,0]:
-        print(f"rho: {rho}, theta (degrees): {np.degrees(theta)}")
-
+        #print(f"rho: {rho}, theta (degrees): {np.degrees(theta)}")
         a = np.cos(theta)
         b = np.sin(theta)
-
         x0 = a * rho
         y0 = b * rho
         x1 = int(x0 + 1000 * (-b))
@@ -63,20 +61,36 @@ if lines is not None:
         x2 = int(x0 - 1000 * (-b))
         y2 = int(y0 - 1000 * (a))
 
+        # cv2.line(frame, (x1, y1), (x2, y2), (255, 0, 0), 2)  # Blue lines for all detected
+        # cv2.imshow("Line Detection in Progress", frame)
+        # cv2.waitKey(500)  # Show each line for 500 milliseconds
+
         #The acceptable tolerance -> Imma keep it high , CHANGE WHILE TESTING
         lower_verti, higher_verti = 80, 100
         lower_hori, higher_hori = -10, 10
 
-        if lower_verti <= np.degrees(theta) <= higher_verti:
-            #Vertical line
-            verti.append((rho, theta, x1, y1, x2, y2))
-        
-        elif lower_hori <= np.degrees(theta) <= higher_hori:
-            #Horizontal line
-            hori.append((rho, theta, x1, y1, x2, y2))
-        
-        else:
-            pass
+        # THE OLD CONDITIONS ?:
+        # if lower_verti <= np.degrees(theta) <= higher_verti:
+        #     verti.append((rho, theta, x1, y1, x2, y2))
+        # elif lower_hori <= np.degrees(theta) <= higher_hori:
+        #     hori.append((rho, theta, x1, y1, x2, y2))
+
+        if lower_hori <= np.degrees(theta) <= higher_hori:
+            verti.append((rho, theta, x1, y1, x2, y2))  # These are horizontal lines
+        elif lower_verti <= np.degrees(theta) <= higher_verti:
+            hori.append((rho, theta, x1, y1, x2, y2))  # These are vertical lines
+    
+    # #I wanna see what i appeneded in the hori, verti array:
+    # for rho, theta, x1, y1, x2, y2 in verti:
+    #     cv2.line(frame, (x1, y1), (x2, y2), (255, 0, 0), 2)
+    #     cv2.imshow("Vertical Lines", frame)
+    #     cv2.waitKey(300)  # Show for 3s
+
+    # # Draw all horizontal lines in green
+    # for rho, theta, x1, y1, x2, y2 in hori:
+    #     cv2.line(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
+    #     cv2.imshow("Horizontal Lines", frame)
+    #     cv2.waitKey(300)  # Show for 3s
 
     if len(verti) >=2 and len(hori) >=1:
         #Is the down code really required??
@@ -99,6 +113,11 @@ if lines is not None:
         for li in hori:
             if li[1] < top_line[1]:
                 top_line = li
+
+        #I am just drawing the selected lines in greeen
+        for line in [left_line, right_line, top_line]:
+            rho, theta, x1, y1, x2, y2 = line
+            cv2.line(frame, (x1, y1), (x2, y2), (0, 255, 0), 5)
         
         #Define the line equations -> This from gpt
         left_eq = (np.cos(left_line[1]), np.sin(left_line[1]), -left_line[0])
@@ -107,7 +126,7 @@ if lines is not None:
 
         #Find the intersections
         corners = [find_intersection(left_eq,top_eq), find_intersection(top_eq, right_eq)]
-        print("Corners:", corners)
+        #print("Corners:", corners)
 
         #Draw the lines
         for line in [left_line, right_line, top_line]:
