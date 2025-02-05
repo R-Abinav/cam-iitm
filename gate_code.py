@@ -66,16 +66,11 @@ while True:
             lower_verti, higher_verti = 80, 100
             lower_hori, higher_hori = -10, 10
 
-            if lower_verti <= np.degrees(theta) <= higher_verti:
-                #Vertical line
-                verti.append((rho, theta, x1, y1, x2, y2))
+            if lower_hori <= np.degrees(theta) <= higher_hori:
+                verti.append((rho, theta, x1, y1, x2, y2))  # These are horizontal lines
+            elif lower_verti <= np.degrees(theta) <= higher_verti:
+                hori.append((rho, theta, x1, y1, x2, y2))  # These are vertical lines
             
-            elif lower_hori <= np.degrees(theta) <= higher_hori:
-                #Horizontal line
-                hori.append((rho, theta, x1, y1, x2, y2))
-            
-            else:
-                pass
 
         if len(verti) >=2 and len(hori) >=1:
             #Is the down code really required??

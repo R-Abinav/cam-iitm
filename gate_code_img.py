@@ -13,7 +13,7 @@ def find_intersection(line1, line2):
     return int(x), int(y)
 
 # Load the image
-image_path = "/Users/R.Abinav/Desktop/CV/AUV/images/croppped.png"  # Change this to your image path
+image_path = "/Users/R.Abinav/Desktop/CV/AUV/images/greenGate.jpeg"  # Change this to your image path
 frame = cv2.imread(image_path)
 
 if frame is None:

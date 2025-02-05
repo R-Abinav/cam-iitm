@@ -10,14 +10,28 @@ upper2 = np.array([180, 50, 255])
 
 cap = cv2.VideoCapture(0)
 
+#Lets apply some preprocessing -> For better underwater detection
+#I am initializing clahe
+clahe = cv2.createCLAHE(clipLimit=3.0, tileGridSize=(8,8))
+
 while True:
     ret, frame = cap.read()
-
     if not ret:
         print("Failed to capture frame!")
         break
 
-    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+    #Convert to LAB Color Space
+    lab = cv2.cvtColor(frame, cv2.COLOR_BGR2LAB)
+    
+    #Apply the clahe to L channel
+    l,a,b = cv2.split(lab)
+    l_clahe = clahe.apply(l)
+
+    #Merge back to BGR
+    lab_clahe = cv2.merge((l_clahe, a, b))
+    frame_clahe = cv2.cvtColor(lab_clahe, cv2.COLOR_LAB2BGR)
+
+    hsv = cv2.cvtColor(frame_clahe, cv2.COLOR_BGR2HSV)
 
     mask1 = cv2.inRange(hsv, lower1, upper1)
     mask2 = cv2.inRange(hsv, lower2, upper2)
